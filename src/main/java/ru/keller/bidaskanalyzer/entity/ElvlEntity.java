@@ -24,6 +24,6 @@ public class ElvlEntity {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal elvl;
 
-    @OneToOne(mappedBy = "elvl", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "elvl", cascade = CascadeType.ALL)
     private QuoteEntity quote;
 }

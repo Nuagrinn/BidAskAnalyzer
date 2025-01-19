@@ -31,7 +31,7 @@ public class QuoteEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "elvl_id", referencedColumnName = "id")
     private ElvlEntity elvl;
 

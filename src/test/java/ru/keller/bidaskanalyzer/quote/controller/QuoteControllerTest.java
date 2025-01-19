@@ -33,13 +33,14 @@ class QuoteControllerTest {
     }
 
     @Test
-    void processQuote_shouldCreateQuote() throws Exception {
+    void testProcessQuote() throws Exception {
         QuoteDto quoteDto = new QuoteDto();
         quoteDto.setIsin("RU000A0JX0J2");
         quoteDto.setBid(testQuote.getBid());
         quoteDto.setAsk(testQuote.getAsk());
 
         quoteClient.processQuote(quoteDto);
+        Thread.sleep(1000);
 
         var savedQuote = quoteRepository.findByIsin(quoteDto.getIsin()).orElseThrow();
         assertThat(savedQuote).isNotNull();
@@ -49,7 +50,7 @@ class QuoteControllerTest {
     }
 
     @Test
-    void getQuoteById_shouldReturnQuote() throws Exception {
+    void testGetQuoteById() throws Exception {
         QuoteDto fetchedQuote = quoteClient.getQuoteById(testQuote.getId());
 
         assertThat(fetchedQuote).isNotNull();
@@ -57,7 +58,7 @@ class QuoteControllerTest {
     }
 
     @Test
-    void getAllQuotes_shouldReturnQuotesList() throws Exception {
+    void testGetAllQuotes() throws Exception {
         var quotes = quoteClient.getAllQuotes();
 
         assertThat(quotes).isNotEmpty();
@@ -65,7 +66,7 @@ class QuoteControllerTest {
     }
 
     @Test
-    void deleteQuoteById_shouldDeleteQuote() throws Exception {
+    void testDeleteQuoteById() throws Exception {
         quoteClient.deleteQuoteById(testQuote.getId());
 
         assertThat(quoteRepository.existsById(testQuote.getId())).isFalse();
