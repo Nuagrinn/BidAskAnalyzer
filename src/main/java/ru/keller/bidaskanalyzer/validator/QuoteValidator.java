@@ -22,8 +22,6 @@ public class QuoteValidator {
 
     public void validate(QuoteDto quoteDto) {
         validateBidAndAsk(quoteDto);
-        validateIsinExists(quoteDto);
-        validateElvlExists(quoteDto);
     }
 
     /**
@@ -35,22 +33,5 @@ public class QuoteValidator {
         }
     }
 
-    /**
-     * Проверка, что ISIN уже существует в системе.
-     */
-    private void validateIsinExists(QuoteDto quoteDto) {
-        if (quoteRepository.findByIsin(quoteDto.getIsin()).isPresent()) {
-            throw new BusinessValidationException("Котировка с таким ISIN уже существует.");
-        }
-    }
 
-    /**
-     * Проверка, что ElvlEntity уже создано для этого ISIN.
-     */
-    private void validateElvlExists(QuoteDto quoteDto) {
-        Optional<ElvlEntity> elvl = elvlRepository.findByIsin(quoteDto.getIsin());
-        if (elvl.isEmpty()) {
-            throw new BusinessValidationException("Elvl не найдено для ISIN: " + quoteDto.getIsin());
-        }
-    }
 }
