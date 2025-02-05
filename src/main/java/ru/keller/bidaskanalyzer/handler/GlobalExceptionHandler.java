@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.keller.bidaskanalyzer.exception.BusinessValidationException;
 import ru.keller.bidaskanalyzer.exception.ElvlNotFoundException;
 
 @ControllerAdvice
@@ -23,6 +24,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<String> handleBusinessValidationException(BusinessValidationException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     /**
      * Обработка исключений IllegalArgumentException.

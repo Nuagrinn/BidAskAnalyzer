@@ -37,26 +37,22 @@ public class QuoteService {
     @Transactional
     public void processQuote(QuoteDto quoteDto) {
         quoteValidator.validate(quoteDto);
-        Optional<QuoteEntity> existingQuote = quoteRepository.findByIsin(quoteDto.getIsin());
+
         elvlService.updateOrCreateElvl(quoteDto);
+
+        Optional<QuoteEntity> existingQuote = quoteRepository.findByIsin(quoteDto.getIsin());
 
         if (existingQuote.isEmpty()) {
             QuoteEntity newQuote = quoteMapper.toEntity(quoteDto);
-
-            ElvlEntity elvlEntity = elvlRepository.findByIsin(quoteDto.getIsin())
-                    .orElseThrow(() -> new RuntimeException("Elvl not found for ISIN: " + quoteDto.getIsin()));
-            newQuote.setElvl(elvlEntity);
-
+            newQuote.setElvl(elvlRepository.findByIsin(quoteDto.getIsin())
+                    .orElseThrow(() -> new RuntimeException("Elvl not found for ISIN: " + quoteDto.getIsin())));
             quoteRepository.save(newQuote);
         } else {
             QuoteEntity quoteToUpdate = existingQuote.get();
             quoteToUpdate.setBid(quoteDto.getBid());
             quoteToUpdate.setAsk(quoteDto.getAsk());
-
-            ElvlEntity elvlEntity = elvlRepository.findByIsin(quoteDto.getIsin())
-                    .orElseThrow(() -> new RuntimeException("Elvl not found for ISIN: " + quoteDto.getIsin()));
-            quoteToUpdate.setElvl(elvlEntity);
-
+            quoteToUpdate.setElvl(elvlRepository.findByIsin(quoteDto.getIsin())
+                    .orElseThrow(() -> new RuntimeException("Elvl not found for ISIN: " + quoteDto.getIsin())));
             quoteRepository.save(quoteToUpdate);
         }
     }
